@@ -241,3 +241,35 @@ def map_stations_to_coarse(stations_out, mapping, colname):
 
 
 # Main
+if __name__ == '__main__':
+    print(f'Test window: {TEST_START} to {TEST_END}')
+
+    wa_polygon = get_wa_polygon()
+    print('Loaded real Washington state boundary from TIGER')
+
+    stations_df = get_wa_stations(wa_polygon)
+    print(f'Found {len(stations_df)} Washington state stations')
+
+    grid_gdf = build_wa_grid(wa_polygon)
+    print(f'Built WA grid: {len(grid_gdf)} native 3 km cells')
+
+    stations_out, occupied = join_stations_to_grid(stations_df, grid_gdf)
+    print(f'Occupied cells: {len(occupied)}')
+
+    weather_3km = pull_wa_weather(occupied, TEST_START, TEST_END)
+
+    occupied.drop(columns='geometry').to_parquet('wa_grid_cells_3km.parquet')
+    weather_3km.to_parquet('wa_weather_3km.parquet')
+
+    for res_m, label in [(10_000, '10km'), (30_000, '30km')]:
+        mapping = build_coarse_mapping(occupied, res_m)
+        coarse_cells = build_coarse_grid_cells(occupied, mapping)
+        coarse_cells.to_parquet(f'wa_grid_cells_{label}.parquet')
+
+        weather_coarse = aggregate_weather(weather_3km, mapping)
+        weather_coarse.to_parquet(f'wa_weather_{label}.parquet')
+
+        stations_out = map_stations_to_coarse(stations_out, mapping, colname=f'cell_id_{label}')
+
+    stations_out.to_parquet('wa_stations.parquet')
+    print('Done')
