@@ -46,6 +46,9 @@ AGG_RULES = {
     'humidity': 'mean'
 }
 
+RECENT_START_CUTOFF = pd.Timestamp('2020-01-01')
+MIN_RECENT_ACTIVE_YEARS = 3
+
 
 # Get Washington TIGER polygon
 def get_wa_polygon():
@@ -57,6 +60,29 @@ def get_wa_polygon():
         raise ValueError(f'{STATE_NAME} not found in TIGER states data')
 
     return wa.to_crs('EPSG:4326').geometry.unary_union
+
+
+# Filtering stations to those that are currently active or recently active
+def filter_active_stations(stations):
+    raw_end = stations['end_time'].astype(str)
+    end_year = pd.to_numeric(raw_end.str.extract(r'(\d{4})')[0], errors='coerce')
+    current_year = pd.Timestamp.now().year
+
+    start = pd.to_datetime(stations['start_time'], errors='coerce')
+    end = pd.to_datetime(stations['end_time'], errors='coerce')
+    today = pd.Timestamp.now().normalize()
+
+    no_end_date = stations['end_time'].isna() | (stations['end_time'].astype(str).str.strip() == '')
+
+    still_active = (end.notna() & (end > today)) | (end_year > current_year) | no_end_date
+
+    alive_start = start.clip(lower=RECENT_START_CUTOFF)
+    years_alive_after_2020 = (end - alive_start).dt.days / 365.25
+    long_enough_since_2020 = years_alive_after_2020 >= MIN_RECENT_ACTIVE_YEARS
+
+    keep = still_active | long_enough_since_2020
+
+    return stations[keep].copy()
 
 
 # Get Washington seismic stations
@@ -86,6 +112,7 @@ def get_wa_stations(wa_polygon):
         })
 
     station_df = pd.DataFrame(rows)
+    station_df = filter_active_stations(station_df)
 
     station_gdf = gpd.GeoDataFrame(station_df, geometry=gpd.points_from_xy(station_df.longitude, station_df.latitude), crs='EPSG:4326')
 
