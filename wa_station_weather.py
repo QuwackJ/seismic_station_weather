@@ -167,6 +167,15 @@ def join_stations_to_grid(stations_df, grid_gdf):
 
 
 # Pull hourly weather for occupied cells only over the period
+def _extract_values(ds):
+    if hasattr(ds, 'data_vars'):
+        varname = list(ds.data_vars)[0]
+
+        return ds[varname].values.ravel()
+
+    return ds.values.ravel()
+
+
 def pull_wa_weather(occupied_gdf, start, end):
     occupied_idx = set(occupied_gdf.flat_idx)
 
@@ -178,7 +187,7 @@ def pull_wa_weather(occupied_gdf, start, end):
         try:
             H = Herbie(current.strftime('%Y-%m-%d %H:%M'), model=MODEL, product='sfc', fxx=0)
 
-            frames = {name: H.xarray(s).values.ravel() for name, s in VARS.items()}
+            frames = {name: _extract_values(H.xarray(s)) for name, s in VARS.items()}
 
             wind_speed = np.sqrt(frames['wind_u']**2 + frames['wind_v']**2)
 
