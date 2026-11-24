@@ -1,0 +1,32 @@
+# Parquet vs NetCDF Benchmark - Washington Data
+
+Rows: 78,624 | Cells: 546 | 
+Time range: 2024-05-23 to 2024-05-29
+
+## Storage
+
+| Format | Build time (s) | Size (MB) |
+|---|---|---|
+| Parquet | 0.06 | 3.6 |
+| NetCDF | 0.18 | 2.9 |
+
+## Access and Analysis Timings
+
+| Operation | Format | First run (s) | Average (s) |
+|---|---|---|---|
+| full_load | parquet | 0.0317 | 0.0022 |
+| full_load | netcdf | 0.0328 | 0.0311 |
+| point_query_one_cell | parquet | 0.0028 | 0.0022 |
+| point_query_one_cell | netcdf | 0.0217 | 0.0206 |
+| time_range_one_month | parquet | 0.0028 | 0.0025 |
+| time_range_one_month | netcdf | 0.0315 | 0.0306 |
+| random_50_cells | parquet | 0.0028 | 0.0024 |
+| random_50_cells | netcdf | 0.0321 | 0.031 |
+| per_cell_mean_max | parquet | 0.0043 | 0.0038 |
+| per_cell_mean_max | netcdf | 0.0313 | 0.0296 |
+| monthly_aggregation | parquet | 0.0113 | 0.0108 |
+| monthly_aggregation | netcdf | 0.0334 | 0.031 |
+| threshold_filter_count | parquet | 0.0018 | 0.0014 |
+| threshold_filter_count | netcdf | 0.018 | 0.0189 |
+| join_station_data | parquet | 0.0042 | 0.0037 |
+| join_station_data | netcdf | 0.0505 | 0.0329 |
