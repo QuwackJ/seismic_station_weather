@@ -16,8 +16,8 @@ WEATHER_PARQUET_PATH = 'wa_weather_3km.parquet'
 
 OUT_DIR = 'filetype_test_results'
 N_CELLS = 546
-START = '2024-05-23'
-END = '2024-05-29'
+START = '2020-01-01'
+END = '2024-12-31'
 N_REPEATS = 5
 RANDOM_SEED = 42
 
@@ -158,8 +158,8 @@ def record(op_name, fmt, first, avg):
     print(f' {op_name:30s} [{fmt:8s}] first={first:.4f}s avg={avg:.4f}s')
 
 sample_cell = int(rng.choice(cell_ids_all))
-sample_month_start = pd.Timestamp('2024-05-23')
-sample_month_end = pd.Timestamp('2024-05-29')
+sample_month_start = pd.Timestamp('2024-05-01')
+sample_month_end = pd.Timestamp('2024-05-31')
 random_cells = rng.choice(cell_ids_all, size=min(50, N_CELLS), replace=False)
 
 

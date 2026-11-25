@@ -1,32 +1,32 @@
 # Parquet vs NetCDF Benchmark - Washington Data
 
-Rows: 78,624 | Cells: 546 | 
-Time range: 2024-05-23 to 2024-05-29
+Rows: 23,927,904 | Cells: 546 | 
+Time range: 2020-01-01 to 2024-12-31
 
 ## Storage
 
 | Format | Build time (s) | Size (MB) |
 |---|---|---|
-| Parquet | 0.06 | 3.6 |
-| NetCDF | 0.18 | 2.9 |
+| Parquet | 7.48 | 905.5 |
+| NetCDF | 27.90 | 865.7 |
 
 ## Access and Analysis Timings
 
 | Operation | Format | First run (s) | Average (s) |
 |---|---|---|---|
-| full_load | parquet | 0.0317 | 0.0022 |
-| full_load | netcdf | 0.0328 | 0.0311 |
-| point_query_one_cell | parquet | 0.0028 | 0.0022 |
-| point_query_one_cell | netcdf | 0.0217 | 0.0206 |
-| time_range_one_month | parquet | 0.0028 | 0.0025 |
-| time_range_one_month | netcdf | 0.0315 | 0.0306 |
-| random_50_cells | parquet | 0.0028 | 0.0024 |
-| random_50_cells | netcdf | 0.0321 | 0.031 |
-| per_cell_mean_max | parquet | 0.0043 | 0.0038 |
-| per_cell_mean_max | netcdf | 0.0313 | 0.0296 |
-| monthly_aggregation | parquet | 0.0113 | 0.0108 |
-| monthly_aggregation | netcdf | 0.0334 | 0.031 |
-| threshold_filter_count | parquet | 0.0018 | 0.0014 |
-| threshold_filter_count | netcdf | 0.018 | 0.0189 |
-| join_station_data | parquet | 0.0042 | 0.0037 |
-| join_station_data | netcdf | 0.0505 | 0.0329 |
+| full_load | parquet | 2.232 | 0.285 |
+| full_load | netcdf | 3.4834 | 3.4237 |
+| point_query_one_cell | parquet | 0.016 | 0.0118 |
+| point_query_one_cell | netcdf | 0.0578 | 0.0562 |
+| time_range_one_month | parquet | 0.1838 | 0.178 |
+| time_range_one_month | netcdf | 0.2236 | 0.22 |
+| random_50_cells | parquet | 0.165 | 0.1616 |
+| random_50_cells | netcdf | 1.8725 | 1.872 |
+| per_cell_mean_max | parquet | 0.4838 | 0.3713 |
+| per_cell_mean_max | netcdf | 3.5137 | 3.4166 |
+| monthly_aggregation | parquet | 3.5219 | 3.3884 |
+| monthly_aggregation | netcdf | 9.3969 | 9.7282 |
+| threshold_filter_count | parquet | 0.1475 | 0.1367 |
+| threshold_filter_count | netcdf | 0.6868 | 0.662 |
+| join_station_data | parquet | 0.4842 | 0.4746 |
+| join_station_data | netcdf | 3.7682 | 3.843 |
